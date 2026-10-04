@@ -1,0 +1,27 @@
+{
+  "name": "gptw-companies-job-tracker",
+  "version": "1.0.0",
+  "description": "Great Place To Work certified IT companies scraper, career page finder, and Java Developer job application tracker with Playwright MCP support",
+  "main": "scripts/scrape-gptw.js",
+  "scripts": {
+    "scrape": "node scripts/scrape-gptw.js",
+    "search:careers": "node scripts/search-careers.js",
+    "mcp:headed": "npx @playwright/mcp@latest",
+    "mcp:headless": "npx @playwright/mcp@latest --headless"
+  },
+  "keywords": [
+    "great-place-to-work",
+    "gptw",
+    "playwright",
+    "playwright-mcp",
+    "job-tracker",
+    "java-developer",
+    "careers"
+  ],
+  "author": "Manoj Ambati",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/mcp": "^0.0.70",
+    "playwright": "^1.49.0"
+  }
+}
