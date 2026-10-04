@@ -34,7 +34,8 @@ build/
 
 ### Node & Runtime Data ###
 node_modules/
-data/
+/data/
+!src/main/resources/data/
 *.log
 .env
 .browser-profile/
