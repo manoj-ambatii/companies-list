@@ -385,9 +385,14 @@
             <textarea id="editNotes" class="form-control" rows="3" placeholder="e.g. Applied via referral, follow up next Monday..."></textarea>
           </div>
         </div>
-        <div class="modal-footer border-top">
-          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary btn-sm fw-semibold" onclick="saveCompanyDetails()">Save Changes</button>
+        <div class="modal-footer border-top d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteFromModal()">
+            <i class="fa-solid fa-trash-can me-1"></i> Delete Company
+          </button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary btn-sm fw-semibold" onclick="saveCompanyDetails()">Save Changes</button>
+          </div>
         </div>
       </div>
     </div>
@@ -561,6 +566,9 @@
                 <button class="btn btn-light btn-sm btn-action border" onclick="openEditModal(${c.id})" title="Edit Details or Add Notes">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </button>
+                <button class="btn btn-outline-danger btn-sm btn-action" onclick="confirmDelete(${c.id})" title="Delete company (e.g. not related to IT)">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
               </div>
             </td>
           </tr>
@@ -636,6 +644,36 @@
       } catch (err) {
         alert('Error saving details: ' + err.message);
       }
+    }
+
+    function confirmDelete(id) {
+      const company = allCompaniesCache.find(c => c.id === id);
+      const name = company ? company.name : 'this company';
+      if (!confirm(`Are you sure you want to remove "${name}" from the list?\n\n(e.g., if it is not related to IT)`)) {
+        return;
+      }
+      performDelete(id);
+    }
+
+    async function performDelete(id) {
+      try {
+        const res = await fetch(`/api/companies/${id}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) throw new Error('Failed to delete company');
+
+        await loadStats();
+        await loadCompanies();
+      } catch (err) {
+        alert('Error deleting company: ' + err.message);
+      }
+    }
+
+    function deleteFromModal() {
+      const id = parseInt(document.getElementById('editCompanyId').value, 10);
+      if (!id) return;
+      editModalInstance.hide();
+      confirmDelete(id);
     }
 
     async function submitNewCompany() {
